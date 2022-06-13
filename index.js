@@ -71,7 +71,45 @@ rightButton.addEventListener("mouseleave", () => {
 carouselContainer.appendChild(leftButton);
 carouselContainer.appendChild(rightButton);
 
-function moveImage(previousIndex, currentIndex, speed) {
+//adding dots for carousel
+const dotContainer = document.createElement("div");
+dotContainer.id = "dot-container";
+dotContainer.style.position = "absolute";
+dotContainer.style.bottom = "0px";
+dotContainer.style.left = `calc(50% - ${(50 * childrenImages.length) / 2}px`;
+
+for (let i = 0; i < childrenImages.length; i++) {
+  const dot = document.createElement("img");
+  dot.id = i;
+  if (i === 0) {
+    dot.classList.add("active");
+    dot.style.filter =
+      "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+  }
+  dot.setAttribute("src", "./assests/dot-circle-solid.svg");
+  dot.style.width = "50px";
+  dot.style.height = "50px";
+
+  dot.addEventListener("mouseenter", () => {
+    dot.style.filter =
+      "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+  });
+  dot.addEventListener("mouseleave", () => {
+    if (!dot.classList.contains("active")) {
+      dot.style.filter =
+        "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+    }
+  });
+  dot.addEventListener("click", (event) => {
+    carousel.goto(event.target.id);
+  });
+
+  dotContainer.appendChild(dot);
+}
+
+carouselContainer.appendChild(dotContainer);
+
+function moveImage(previousIndex, currentIndex, speed = 10) {
   if (previousIndex < currentIndex) {
     let previousPosition = -previousIndex * carouselContainerWidth;
     let currentPosition = previousPosition;
@@ -86,7 +124,7 @@ function moveImage(previousIndex, currentIndex, speed) {
       });
     }
     play();
-  } else {
+  } else if (previousIndex > currentIndex) {
     let previousPosition = -previousIndex * carouselContainerWidth;
     let currentPosition = previousPosition;
     let nextPosition = -currentIndex * carouselContainerWidth;
@@ -102,6 +140,20 @@ function moveImage(previousIndex, currentIndex, speed) {
     play();
   }
 }
+function changeActiveDot(currentIndex) {
+  let dots = [...document.getElementById("dot-container").children];
+  dots.forEach((dot) => {
+    if (currentIndex === parseInt(dot.id)) {
+      dot.classList.add("active");
+      dot.style.filter =
+        "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+    } else {
+      dot.classList.remove("active");
+      dot.style.filter =
+        "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+    }
+  });
+}
 
 class Carousel {
   constructor(speed = 10) {
@@ -109,12 +161,29 @@ class Carousel {
     this.currentIndex = 0;
   }
   moveRight() {
-    moveImage(this.currentIndex, this.currentIndex + 1, this.speed);
-    this.currentIndex += 1;
+    if (this.currentIndex === childrenImages.length - 1) {
+      moveImage(this.currentIndex, 0, 30);
+      this.currentIndex = 0;
+    } else {
+      moveImage(this.currentIndex, this.currentIndex + 1, this.speed);
+      this.currentIndex += 1;
+    }
+    changeActiveDot(this.currentIndex);
   }
   moveLeft() {
-    moveImage(this.currentIndex, this.currentIndex - 1, this.speed);
-    this.currentIndex -= 1;
+    if (this.currentIndex === 0) {
+      moveImage(this.currentIndex, childrenImages.length - 1, 30);
+      this.currentIndex = childrenImages.length - 1;
+    } else {
+      moveImage(this.currentIndex, this.currentIndex - 1, this.speed);
+      this.currentIndex -= 1;
+    }
+    changeActiveDot(this.currentIndex);
+  }
+  goto(currentIndex) {
+    moveImage(this.currentIndex, parseInt(currentIndex), 30);
+    this.currentIndex = parseInt(currentIndex);
+    changeActiveDot(this.currentIndex);
   }
 }
 
