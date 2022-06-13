@@ -14,7 +14,7 @@ carouselContainer.style.width = toPixel(carouselContainerWidth);
 carouselContainer.style.height = toPixel(carouselContainerHeight);
 carouselContainer.style.margin = "auto";
 carouselContainer.style.position = "relative";
-carouselContainer.style.overflowY = "hidden";
+carouselContainer.style.overflow = "hidden";
 
 // carouselImageWrapper styling
 carouselImageWrapper.style.position = "absolute";
@@ -33,7 +33,44 @@ childrenImages.forEach((image, index) => {
   image.style.left = toPixel(index * carouselContainerWidth);
 });
 
-let currentIndex = 0;
+// button styling
+const leftButton = document.createElement("img");
+leftButton.setAttribute("src", "./assests/arrow-left-solid.svg");
+leftButton.style.height = "100px";
+leftButton.style.width = "100px";
+leftButton.style.position = "absolute";
+leftButton.style.left = "0px";
+leftButton.style.top = "50%";
+leftButton.style.zIndex = "1";
+leftButton.addEventListener("mouseenter", () => {
+  leftButton.style.filter =
+    "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+});
+leftButton.addEventListener("mouseleave", () => {
+  leftButton.style.filter =
+    "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+});
+
+const rightButton = document.createElement("img");
+rightButton.setAttribute("src", "./assests/arrow-right-solid.svg");
+rightButton.style.height = "100px";
+rightButton.style.width = "100px";
+rightButton.style.position = "absolute";
+rightButton.style.right = "0px";
+rightButton.style.top = "50%";
+rightButton.style.zIndex = "1";
+rightButton.addEventListener("mouseenter", () => {
+  rightButton.style.filter =
+    "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+});
+rightButton.addEventListener("mouseleave", () => {
+  rightButton.style.filter =
+    "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+});
+
+carouselContainer.appendChild(leftButton);
+carouselContainer.appendChild(rightButton);
+
 function moveImage(previousIndex, currentIndex, speed) {
   if (previousIndex < currentIndex) {
     let previousPosition = -previousIndex * carouselContainerWidth;
@@ -69,18 +106,23 @@ function moveImage(previousIndex, currentIndex, speed) {
 class Carousel {
   constructor(speed = 10) {
     this.speed = speed;
+    this.currentIndex = 0;
   }
-  currentIndex = 0;
   moveRight() {
-    moveImage(currentIndex, currentIndex + 1, this.speed);
-    currentIndex += 1;
+    moveImage(this.currentIndex, this.currentIndex + 1, this.speed);
+    this.currentIndex += 1;
   }
   moveLeft() {
-    moveImage(currentIndex, currentIndex - 1, this.speed);
-    currentIndex -= 1;
+    moveImage(this.currentIndex, this.currentIndex - 1, this.speed);
+    this.currentIndex -= 1;
   }
 }
 
 let carousel = new Carousel();
 
-carousel.moveRight();
+leftButton.addEventListener("click", () => {
+  carousel.moveLeft();
+});
+rightButton.addEventListener("click", () => {
+  carousel.moveRight();
+});
