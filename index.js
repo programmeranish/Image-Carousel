@@ -33,82 +33,6 @@ childrenImages.forEach((image, index) => {
   image.style.left = toPixel(index * carouselContainerWidth);
 });
 
-// button styling
-const leftButton = document.createElement("img");
-leftButton.setAttribute("src", "./assests/arrow-left-solid.svg");
-leftButton.style.height = "100px";
-leftButton.style.width = "100px";
-leftButton.style.position = "absolute";
-leftButton.style.left = "0px";
-leftButton.style.top = "50%";
-leftButton.style.zIndex = "1";
-leftButton.addEventListener("mouseenter", () => {
-  leftButton.style.filter =
-    "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
-});
-leftButton.addEventListener("mouseleave", () => {
-  leftButton.style.filter =
-    "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
-});
-
-const rightButton = document.createElement("img");
-rightButton.setAttribute("src", "./assests/arrow-right-solid.svg");
-rightButton.style.height = "100px";
-rightButton.style.width = "100px";
-rightButton.style.position = "absolute";
-rightButton.style.right = "0px";
-rightButton.style.top = "50%";
-rightButton.style.zIndex = "1";
-rightButton.addEventListener("mouseenter", () => {
-  rightButton.style.filter =
-    "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
-});
-rightButton.addEventListener("mouseleave", () => {
-  rightButton.style.filter =
-    "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
-});
-
-carouselContainer.appendChild(leftButton);
-carouselContainer.appendChild(rightButton);
-
-//adding dots for carousel
-const dotContainer = document.createElement("div");
-dotContainer.id = "dot-container";
-dotContainer.style.position = "absolute";
-dotContainer.style.bottom = "0px";
-dotContainer.style.left = `calc(50% - ${(50 * childrenImages.length) / 2}px`;
-
-for (let i = 0; i < childrenImages.length; i++) {
-  const dot = document.createElement("img");
-  dot.id = i;
-  if (i === 0) {
-    dot.classList.add("active");
-    dot.style.filter =
-      "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
-  }
-  dot.setAttribute("src", "./assests/dot-circle-solid.svg");
-  dot.style.width = "50px";
-  dot.style.height = "50px";
-
-  dot.addEventListener("mouseenter", () => {
-    dot.style.filter =
-      "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
-  });
-  dot.addEventListener("mouseleave", () => {
-    if (!dot.classList.contains("active")) {
-      dot.style.filter =
-        "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
-    }
-  });
-  dot.addEventListener("click", (event) => {
-    carousel.goto(event.target.id);
-  });
-
-  dotContainer.appendChild(dot);
-}
-
-carouselContainer.appendChild(dotContainer);
-
 function moveImage(previousIndex, currentIndex, speed = 10) {
   if (previousIndex < currentIndex) {
     let previousPosition = -previousIndex * carouselContainerWidth;
@@ -160,6 +84,91 @@ class Carousel {
     this.speed = speed;
     this.currentIndex = 0;
   }
+  addButtons() {
+    this.leftButton = document.createElement("img");
+    this.leftButton.setAttribute("src", "./assests/arrow-left-solid.svg");
+    this.leftButton.style.height = "100px";
+    this.leftButton.style.width = "100px";
+    this.leftButton.style.position = "absolute";
+    this.leftButton.style.left = "0px";
+    this.leftButton.style.top = "50%";
+    this.leftButton.style.zIndex = "1";
+    this.leftButton.addEventListener("mouseenter", () => {
+      this.leftButton.style.filter =
+        "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+    });
+    this.leftButton.addEventListener("mouseleave", () => {
+      this.leftButton.style.filter =
+        "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+    });
+    this.leftButton.addEventListener("click", () => {
+      this.moveLeft();
+    });
+
+    this.rightButton = document.createElement("img");
+    this.rightButton.setAttribute("src", "./assests/arrow-right-solid.svg");
+    this.rightButton.style.height = "100px";
+    this.rightButton.style.width = "100px";
+    this.rightButton.style.position = "absolute";
+    this.rightButton.style.right = "0px";
+    this.rightButton.style.top = "50%";
+    this.rightButton.style.zIndex = "1";
+    this.rightButton.addEventListener("mouseenter", () => {
+      this.rightButton.style.filter =
+        "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+    });
+    this.rightButton.addEventListener("mouseleave", () => {
+      this.rightButton.style.filter =
+        "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+    });
+    this.rightButton.addEventListener("click", () => {
+      this.moveRight();
+    });
+
+    carouselContainer.appendChild(this.leftButton);
+    carouselContainer.appendChild(this.rightButton);
+  }
+
+  addDots() {
+    this.dotContainer = document.createElement("div");
+    this.dotContainer.id = "dot-container";
+    this.dotContainer.style.position = "absolute";
+    this.dotContainer.style.bottom = "0px";
+    this.dotContainer.style.left = `calc(50% - ${
+      (50 * childrenImages.length) / 2
+    }px`;
+
+    for (let i = 0; i < childrenImages.length; i++) {
+      this.dot = document.createElement("img");
+      this.dot.id = i;
+      if (i === 0) {
+        this.dot.classList.add("active");
+        this.dot.style.filter =
+          "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+      }
+      this.dot.setAttribute("src", "./assests/dot-circle-solid.svg");
+      this.dot.style.width = "50px";
+      this.dot.style.height = "50px";
+
+      this.dot.addEventListener("mouseenter", () => {
+        this.dot.style.filter =
+          "invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)";
+      });
+      this.dot.addEventListener("mouseleave", () => {
+        if (!this.dot.classList.contains("active")) {
+          this.dot.style.filter =
+            "invert(0) sepia(0) saturate(0) hue-rotate(0) brightness(0) contrast(119%)";
+        }
+      });
+      this.dot.addEventListener("click", (event) => {
+        carousel.goto(event.target.id);
+      });
+
+      this.dotContainer.appendChild(this.dot);
+    }
+
+    carouselContainer.appendChild(this.dotContainer);
+  }
   moveRight() {
     if (this.currentIndex === childrenImages.length - 1) {
       moveImage(this.currentIndex, 0, 30);
@@ -188,10 +197,5 @@ class Carousel {
 }
 
 let carousel = new Carousel();
-
-leftButton.addEventListener("click", () => {
-  carousel.moveLeft();
-});
-rightButton.addEventListener("click", () => {
-  carousel.moveRight();
-});
+carousel.addButtons();
+carousel.addDots();
