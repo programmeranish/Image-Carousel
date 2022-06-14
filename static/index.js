@@ -239,9 +239,15 @@ class Carousel {
     this.currentIndex = parseInt(currentIndex);
     changeActiveDot(this.currentIndex, dotsContainer);
   }
+  slideAutomatic() {
+    setInterval(() => {
+      this.moveRight();
+    }, 3000);
+  }
 }
 
 let carousel = new Carousel();
 carousel.addButtons();
 carousel.styleCarousel();
 carousel.addDots();
+carousel.slideAutomatic();
